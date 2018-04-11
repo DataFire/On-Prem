@@ -16,8 +16,10 @@ sudo `AWS_ACCESS_KEY_ID=YOUR_KEY AWS_SECRET_ACCESS_KEY=YOUR_SECRET aws ecr get-l
 ```bash
 cd ./web
 sudo docker build . -t my-datafire-web
-sudo docker run -it -p 3000:8080 my-datafire-web npm run start
+sudo docker run -it -p 3000:8080 my-datafire-web npm run serve:prod
 ```
+
+Visit `http://localhost:3000` to see the website.
 
 ## Customization
 
