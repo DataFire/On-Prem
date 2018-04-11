@@ -7,6 +7,8 @@ You'll need to [contact the DataFire team](https://app.datafire.io/contact) for 
 sudo apt-get update
 sudo apt-get install -y curl git python-pip python-dev build-essential zip gzip
 pip install awscli --upgrade --user
+
+# Use the keys provided by the DataFire team to log into docker
 sudo `AWS_ACCESS_KEY_ID=YOUR_KEY AWS_SECRET_ACCESS_KEY=YOUR_SECRET aws ecr get-login --no-include-email --region us-west-2`
 ```
 
