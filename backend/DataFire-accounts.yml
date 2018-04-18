@@ -1,0 +1,66 @@
+accounts:
+    mongodb_dev:
+        url: 'mongodb://'
+        integration: mongodb
+
+    # fill this out with the location of your mongodb instance
+    mongodb_prod:
+        url: 'mongodb://'
+        integration: mongodb
+    mongodb: mongodb_prod
+
+    mixpanel:
+        id: abcde
+
+    gmail_contact:
+        integration: google_gmail
+        from_address: no-reply@datafire.io
+        access_token: abcde
+        refresh_token: abcde
+        client_id: abcde
+        client_secret: abcde
+
+    # This is a secret for encoding jwt tokens. Change to whatever you like.
+    jwt:
+        secret: thisisamadeupsecret
+
+    # This is a key used to encrypt credentials in MongoDB. It should be hexadecimal.
+    encryption:
+        key: ABCDE
+
+    # If you're using AWS for computing, set these keys using properly scoped IAM roles
+    aws:
+        region: us-west-2
+        accessKeyId: abcde
+        secretAccessKey: abcde
+    aws_make_lambda:
+        region: us-west-2
+        accessKeyId: abcde
+        secretAccessKey: abcde
+
+    # If you're using GitHub for git hosting, set this to the account's access token
+    github_proxy:
+        access_token: abcde
+
+    # Set client_id and client_secret for any OAuth applications you want users to be able to authorize.
+    # You'll need to set up an OAuth application on each service's website to get these credentials.
+    # See the README for a partial list of OAuth integrations
+    oauth_bitbucket:
+        client_id: abcde
+        client_secret: abcde
+
+    # box, google, and ebay all have multiple integrations that can use the same OAuth client
+    # The 'module' field must be set for these.
+    oauth_box:
+        client_id: abcde
+        client_secret: abcde
+        module: box_content
+    oauth_ebay:
+        client_id: abcde
+        client_secret: abcde
+        redirect_uri: your-ebay-redirect-uri-ID
+        module: ebay_buy_browse
+    oauth_google:
+        client_id: abcde
+        client_secret: abcde
+        module: google_gmail

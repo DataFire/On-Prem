@@ -12,6 +12,16 @@ pip install awscli --upgrade --user
 sudo `AWS_ACCESS_KEY_ID=YOUR_KEY AWS_SECRET_ACCESS_KEY=YOUR_SECRET aws ecr get-login --no-include-email --region us-west-2`
 ```
 
+## Run the Backend
+
+Fill out `./backend/DataFire-accounts.yml` with the proper credentials before starting.
+
+```bash
+cd ./backend
+sudo docker build . -t my-datafire-backend
+sudo docker run -it -p 3001:8080 my-datafire-backend forever server.js
+```
+
 ## Run the Website
 ```bash
 cd ./web
@@ -21,7 +31,7 @@ sudo docker run -it -p 3000:8080 my-datafire-web npm run serve:prod
 
 Visit `http://localhost:3000` to see the website.
 
-## Customization
+### Customization
 
 ### Styles
 You can set the Bootstrap theme by editing ./bootstrap.scss. You can use a [GUI editor](http://bbrennan.info/strapping/) to generate the SASS file.
@@ -31,10 +41,10 @@ Be sure to also set the variable `$brand-secondary` in bootstrap.scss.
 Additional styles can be added to this file as well.
 
 ### Assets
-Everything in the ./assets folder will be made available at http://localhost/assets
+Everything in the `./web/assets` folder will be made available at `http://localhost/assets`
 
 ### Settings
-Edit ./settings.ts to change your deployment's configuration
+Edit `./web/settings.ts` to change your deployment's configuration
 
 #### Options
 * whitelabel: must be set to true
@@ -45,3 +55,37 @@ Edit ./settings.ts to change your deployment's configuration
 * refresh_url: URL for getting OAuth refresh tokens, e.g. 'https://api.datafire.io/oauth/provider/refresh'
 * integrations: A whitelist of integrations available in the UI
 * client_ids: A list of client IDs for OAuth-enabled integrations
+
+## OAuth Application
+
+This is a partial list of OAuth providers that are supported. Add your `client_id` for each app
+to `./web/settings.ts`, and both `client_id` and `client_secret` to `./backend/DataFire-accounts.yml`
+
+* azure
+* authentiq
+* bitbucket
+* box
+* bufferapp
+* ebay
+* flat
+* furkot
+* github
+* google
+* instagram
+* lyft
+* medium
+* motaword
+* netatmo
+* reverb
+* runscope
+* slack
+* spotify
+* squareup
+* stackexchange
+* facebook
+* fitbit
+* producthunt
+* heroku
+* linkedin
+* reddit
+
