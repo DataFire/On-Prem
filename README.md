@@ -14,19 +14,33 @@ sudo `AWS_ACCESS_KEY_ID=YOUR_KEY AWS_SECRET_ACCESS_KEY=YOUR_SECRET aws ecr get-l
 
 ## Run the Backend
 
-Fill out `./backend/DataFire-accounts.yml` with the proper credentials before starting.
 
+### Start a MongoDB instance
+```bash
+sudo docker run --name datafire-mongo -d mongo
+sudo docker inspect datafire-mongo | grep IPAddress   # note your container's IP address
+```
+
+Now fill out `./backend/DataFire-accounts.yml`. Use the IP address above with port 27017 for the mongodb URL, e.g.
+
+```yaml
+mongodb:
+    url: 'mongodb://172.17.0.2:27017'
+    integration: mongodb
+```
+
+### Start the Server
 ```bash
 cd ./backend
 sudo docker build . -t my-datafire-backend
-sudo docker run -it -p 3001:8080 my-datafire-backend forever server.js
+sudo docker run --name datafire-backend -it -p 3001:8080 my-datafire-backend node server.js # or "forever server.js" to keep running
 ```
 
 ## Run the Website
 ```bash
 cd ./web
 sudo docker build . -t my-datafire-web
-sudo docker run -it -p 3000:8080 my-datafire-web npm run serve:prod
+sudo docker run --name datafire-web -it -p 3000:8080 my-datafire-web npm run serve:prod
 ```
 
 Visit `http://localhost:3000` to see the website.

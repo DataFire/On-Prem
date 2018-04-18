@@ -1,11 +1,7 @@
 accounts:
-    mongodb_dev:
-        url: 'mongodb://'
-        integration: mongodb
-
-    # fill this out with the location of your mongodb instance
-    mongodb_prod:
-        url: 'mongodb://'
+    # Fill this out with the location of your mongodb instance
+    mongodb:
+        url: 'mongodb://172.17.0.2:27017'
         integration: mongodb
     mongodb: mongodb_prod
 
