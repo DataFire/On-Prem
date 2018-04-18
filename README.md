@@ -33,14 +33,22 @@ mongodb:
 ```bash
 cd ./backend
 sudo docker build . -t my-datafire-backend
-sudo docker run --name datafire-backend -it -p 3001:8080 my-datafire-backend node server.js # or "forever server.js" to keep running
+sudo docker run --name datafire-backend -p 3001:8080 -d my-datafire-backend forever server.js
+sudo docker inspect datafire-backend | grep IPAddress  # note your container's IP address
 ```
 
 ## Run the Website
+
+First, change `api_host` in `./web/settings.ts` to the IP Address for your `datafire-backend` container:
+
+```bash
+sudo docker inspect datafire-backend | grep IPAddress  # note your container's IP address
+```
+
 ```bash
 cd ./web
 sudo docker build . -t my-datafire-web
-sudo docker run --name datafire-web -it -p 3000:8080 my-datafire-web npm run serve:prod
+sudo docker run --name datafire-web -it -p 3000:8080 -d my-datafire-web npm run serve:prod
 ```
 
 Visit `http://localhost:3000` to see the website.
