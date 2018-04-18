@@ -8,14 +8,6 @@ accounts:
     mixpanel:
         id: abcde
 
-    gmail_contact:
-        integration: google_gmail
-        from_address: no-reply@datafire.io
-        access_token: abcde
-        refresh_token: abcde
-        client_id: abcde
-        client_secret: abcde
-
     # This is a secret for encoding jwt tokens. Change to whatever you like.
     jwt:
         secret: thisisamadeupsecret
@@ -34,9 +26,10 @@ accounts:
         accessKeyId: abcde
         secretAccessKey: abcde
 
-    # If you're using GitHub for git hosting, set this to the account's access token
+    # If you're using GitHub for git hosting, set this to the account's access token and username
     github_proxy:
         access_token: abcde
+        username: account-username
 
     # Set client_id and client_secret for any OAuth applications you want users to be able to authorize.
     # You'll need to set up an OAuth application on each service's website to get these credentials.
