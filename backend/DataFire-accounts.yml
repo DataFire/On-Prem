@@ -28,8 +28,8 @@ accounts:
 
     # If you're using GitHub for git hosting, set this to the account's access token and username
     github_proxy:
-        access_token: abcde
-        username: account-username
+        access_token: 970420a0aa46d74ae731d1ec77a412729dd65ed0
+        username: lucybot-v3-access
 
     # Set client_id and client_secret for any OAuth applications you want users to be able to authorize.
     # You'll need to set up an OAuth application on each service's website to get these credentials.

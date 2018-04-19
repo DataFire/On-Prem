@@ -14,14 +14,36 @@ sudo `AWS_ACCESS_KEY_ID=YOUR_KEY AWS_SECRET_ACCESS_KEY=YOUR_SECRET aws ecr get-l
 
 ## Run the Backend
 
-
 ### Start a MongoDB instance
+Users and project data will be stored in MongoDB.
+
 ```bash
 sudo docker run --name datafire-mongo -d mongo
-sudo docker inspect datafire-mongo | grep IPAddress   # note your container's IP address
 ```
 
-Now fill out `./backend/DataFire-accounts.yml`. Use the IP address above with port 27017 for the mongodb URL, e.g.
+### Start Docker (DinD)
+Docker is used to run projects (both in `dev` and `prod`). Alternatively, you can set
+AWS credentials in `./backend/DataFire-accounts.yml` to use AWS ECS and Lambda.
+
+First, edit `./dind/Dockerfile` to add your AWS credentials. Then run
+
+```bash
+sudo docker run --privileged --name datafire-docker -d docker:dind
+sudo docker pull 205639412702.dkr.ecr.us-west-2.amazonaws.com/datafire:latest
+sudo docker save 205639412702.dkr.ecr.us-west-2.amazonaws.com/datafire | gzip > ./datafire-image.tar.gz
+sudo docker cp ./datafire-image.tar.gz datafire-docker:/home/dockremap/datafire-image.tar.gz
+sudo docker exec --privileged -it datafire-docker sh -c 'docker load < /home/dockremap/datafire-image.tar.gz'
+```
+
+### Update project settings
+
+Now we need to tell DataFire where your MongoDB and Docker instances live.
+
+Add your MongoDB location to `./backend/DataFire-accounts.yml`. For example:
+
+```bash
+sudo docker inspect datafire-mongo | grep IPAddress   # note your container's IP address
+```
 
 ```yaml
 mongodb:
@@ -29,10 +51,20 @@ mongodb:
     integration: mongodb
 ```
 
+Add your Docker location to `./backend/settings.js`. For example:
+```bash
+sudo docker inspect datafire-docker | grep IPAddress   # note your container's IP address
+```
+
+```js
+modle.exports = {
+  docker_host: 'http://172.17.0.3:2375',
+}
+```
+
 ### Start the Server
 ```bash
-cd ./backend
-sudo docker build . -t my-datafire-backend
+sudo docker build ./backend -t my-datafire-backend
 sudo docker run --name datafire-backend -p 3001:8080 -d my-datafire-backend forever server.js
 sudo docker inspect datafire-backend | grep IPAddress  # note your container's IP address
 ```
