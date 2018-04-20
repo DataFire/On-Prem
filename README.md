@@ -25,10 +25,8 @@ sudo docker run --name datafire-mongo -d mongo
 Docker is used to run projects (both in `dev` and `prod`). Alternatively, you can set
 AWS credentials in `./backend/DataFire-accounts.yml` to use AWS ECS and Lambda.
 
-First, edit `./dind/Dockerfile` to add your AWS credentials. Then run
-
 ```bash
-sudo docker run --privileged --name datafire-docker -d docker:dind
+sudo docker run --privileged --name datafire-docker -p 32768-33000:32768-33000 -d docker:dind
 sudo docker pull 205639412702.dkr.ecr.us-west-2.amazonaws.com/datafire:latest
 sudo docker save 205639412702.dkr.ecr.us-west-2.amazonaws.com/datafire | gzip > ./datafire-image.tar.gz
 sudo docker cp ./datafire-image.tar.gz datafire-docker:/home/dockremap/datafire-image.tar.gz
@@ -53,7 +51,7 @@ mongodb:
 
 Add your Docker location to `./backend/settings.js`. For example:
 ```bash
-sudo docker inspect datafire-docker | grep IPAddress   # note your container's IP address
+sudo docker inspect datafire-docker | grep IPAddress
 ```
 
 ```js
@@ -66,20 +64,22 @@ modle.exports = {
 ```bash
 sudo docker build ./backend -t my-datafire-backend
 sudo docker run --name datafire-backend -p 3001:8080 -d my-datafire-backend forever server.js
-sudo docker inspect datafire-backend | grep IPAddress  # note your container's IP address
 ```
 
 ## Run the Website
 
-First, change `api_host` in `./web/settings.ts` to the IP Address for your `datafire-backend` container:
-
+* Change `api_host` in `./web/settings.ts` to the IP Address for your `datafire-backend` container:
 ```bash
-sudo docker inspect datafire-backend | grep IPAddress  # note your container's IP address
+sudo docker inspect datafire-backend | grep IPAddres
+```
+
+* Change `deployment_host` in `./web/settings.ts` to the IP address for your `datafire-docker` container
+```bash
+sudo docker inspect datafire-docker | grep IPAddress
 ```
 
 ```bash
-cd ./web
-sudo docker build . -t my-datafire-web
+sudo docker build ./web -t my-datafire-web
 sudo docker run --name datafire-web -it -p 3000:8080 -d my-datafire-web npm run serve:prod
 ```
 
