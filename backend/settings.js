@@ -1,8 +1,10 @@
 module.exports = {
   whitelabel: true,
   public_repos: true,
-  api_host: 'https://api.datafire.io',
   web_host: 'https://app.datafire.io',
-  docker_host: 'http://172.17.0.5:2375',
+  api_host: 'http://localhost:3001',
+  git_host: 'http://172.17.0.3:80',
+  git_directory: '/var/lib/git',
+  docker_host: 'http://172.17.0.4:2375',
 }
 
