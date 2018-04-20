@@ -23,6 +23,25 @@ mkdir ~/datafire-mongodb
 sudo docker run --name datafire-mongo -v ~/datafire-mongodb:/data/db -d mongo
 ```
 
+### Start a Git server
+Git is used to store the code for each project.
+You'll need to create a directory to store projects (here `~/datafire-git`).
+
+```bash
+mkdir ~/datafire-git
+git clone --bare https://github.com/DataFire-repos/hello-world ~/datafire-git/_start.git
+sudo docker run -d  \
+  --name datafire-git \
+  -v ~/datafire-git:/var/lib/git \
+  -p 3002:80 \
+  cirocosta/gitserver-http
+
+# Touch the _start repo to initialize /refs/heads/master
+git clone http://localhost:3002/_start.git && cd _start
+echo " " >> README.md && git commit -a -m "touch readme"
+git push && cd .. && rm -rf _start
+```
+
 ### Start Docker (DinD)
 Docker is used to run projects (both in `dev` and `prod`). Alternatively, you can set
 AWS credentials in `./backend/DataFire-accounts.yml` to use AWS ECS and Lambda.
@@ -35,15 +54,18 @@ sudo docker cp ./datafire-image.tar.gz datafire-docker:/home/dockremap/datafire-
 sudo docker exec --privileged -it datafire-docker sh -c 'docker load < /home/dockremap/datafire-image.tar.gz'
 ```
 
-### Update project settings
+### Update Backend Settings
 
-Now we need to tell DataFire where your MongoDB and Docker instances live.
+Now we need to tell the DataFire backend where each of these services live.
+
+Use `docker inspect` to find the IP address for each container:
+```bash
+sudo docker inspect datafire-mongo  | grep IPAddress
+sudo docker inspect datafire-docker | grep IPAddress
+```
 
 Add your MongoDB location to `./backend/DataFire-accounts.yml`. For example:
 
-```bash
-sudo docker inspect datafire-mongo | grep IPAddress   # note your container's IP address
-```
 
 ```yaml
 mongodb:
@@ -51,33 +73,45 @@ mongodb:
     integration: mongodb
 ```
 
-Add your Docker location to `./backend/settings.js`. For example:
-```bash
-sudo docker inspect datafire-docker | grep IPAddress
-```
+Add your Docker location to `./backend/settings.js`. You should also set
+your machine's public or intranet IP address as `api_host`. For example:
 
 ```js
 modle.exports = {
-  docker_host: 'http://172.17.0.3:2375',
+  api_host: 'http://localhost:3001',
+  docker_host: 'http://172.17.0.4:2375',
 }
 ```
 
-### Start the Server
+### Start the Backend
+The backend will handle all API requests. Here we start it on port `3001`.
+
 ```bash
 sudo docker build ./backend -t my-datafire-backend
-sudo docker run --name datafire-backend -p 3001:8080 -d my-datafire-backend forever server.js
+sudo docker run -d \
+  --name datafire-backend \
+  -p 3001:8080 \
+  -v ~/datafire-git:/var/lib/git \
+  my-datafire-backend forever server.js
 ```
 
 ## Run the Website
 
-* Change `api_host` in `./web/settings.ts` to the IP Address for your `datafire-backend` container:
-```bash
-sudo docker inspect datafire-backend | grep IPAddres
-```
+### Update website settings
 
-* Change `deployment_host` in `./web/settings.ts` to the IP address for your `datafire-docker` container
-```bash
-sudo docker inspect datafire-docker | grep IPAddress
+We need to tell the website where the API is hosted, and where deployments will live (i.e. the DinD IP address).
+We also need to set `git_host` to the same as `api_host`.
+
+Unless you're just visiting the website on `localhost`, this should be the public or intranet IP of your server.
+
+```ts
+export const settings:any = {
+  whitelabel: true,
+  web_host: 'http://localhost',
+  api_host: 'http://localhost:3001',
+  git_host: 'http://localhost:3001',
+  deployment_host: 'http://localhost',
+}
 ```
 
 ```bash
