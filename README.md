@@ -16,9 +16,11 @@ sudo `AWS_ACCESS_KEY_ID=YOUR_KEY AWS_SECRET_ACCESS_KEY=YOUR_SECRET aws ecr get-l
 
 ### Start a MongoDB instance
 Users and project data will be stored in MongoDB.
+You'll need to create a directory to store the database (here `~/datafire-mongodb`).
 
 ```bash
-sudo docker run --name datafire-mongo -d mongo
+mkdir ~/datafire-mongodb
+sudo docker run --name datafire-mongo -v ~/datafire-mongodb:/data/db -d mongo
 ```
 
 ### Start Docker (DinD)
