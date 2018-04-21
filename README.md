@@ -100,7 +100,7 @@ sudo docker run -d \
 ### Update website settings
 
 We need to tell the website where the API is hosted, and where deployments will live (i.e. the DinD IP address).
-We also need to set `git_host` to the same as `api_host`.
+We also need to set `git_host` to be the same as `api_host`.
 
 Unless you're just visiting the website on `localhost`, this should be the public or intranet IP of your server.
 
@@ -146,7 +146,7 @@ Edit `./web/settings.ts` to change your deployment's configuration
 * integrations: A whitelist of integrations available in the UI
 * client_ids: A list of client IDs for OAuth-enabled integrations
 
-## OAuth Application
+## OAuth Applications
 
 This is a partial list of OAuth providers that are supported. Add your `client_id` for each app
 to `./web/settings.ts`, and both `client_id` and `client_secret` to `./backend/DataFire-accounts.yml`
