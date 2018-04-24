@@ -83,6 +83,16 @@ modle.exports = {
 }
 ```
 
+### Repository Access
+By default, project code is only accessible to the project's creator.
+However, this means the backend **must be served over SSL**, or `git clone`
+will not work, and you will not be able to deploy your projects.
+
+If you don't have SSL set up (i.e. `api_host` doesn't start with `https://`),
+you need to change `allow_public_repo_access` to `true`
+in `./backend/settings.js`. Credentials will still be kept private - only the project's
+code will be available publicly.
+
 ### Start the Backend
 The backend will handle all API requests. Here we start it on port `3001`.
 

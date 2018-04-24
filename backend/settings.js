@@ -6,5 +6,6 @@ module.exports = {
   git_host: 'http://172.17.0.3:80',
   git_directory: '/var/lib/git',
   docker_host: 'http://172.17.0.4:2375',
+  allow_public_repo_access: false,
 }
 
