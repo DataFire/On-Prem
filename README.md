@@ -1,5 +1,5 @@
-# DataFire.io On-Premise
-This is a sample repository for running DataFire.io on-premise.
+# DataFire.io On-Prem and White-Label
+This is a sample repository for running DataFire.io on your own servers.
 You'll need to [contact the DataFire team](https://app.datafire.io/contact) for an access key.
 
 ## Setup
