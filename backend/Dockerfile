@@ -1,4 +1,4 @@
-FROM 205639412702.dkr.ecr.us-west-2.amazonaws.com/datafire-backend:latest
+FROM 205639412702.dkr.ecr.us-west-2.amazonaws.com/datafire-backend:release
 
 ADD ./settings.js ./
 ADD ./DataFire-accounts.yml ./
