@@ -47,7 +47,7 @@ Docker is used to run projects (both in `dev` and `prod`). Alternatively, you ca
 AWS credentials in `./backend/DataFire-accounts.yml` to use AWS ECS and Lambda.
 
 ```bash
-sudo docker run --privileged --name datafire-docker -p 32768-33000:32768-33000 -d docker:dind
+sudo docker run --privileged --name datafire-docker -p 32768-33000:32768-33000 -d docker:17-dind
 sudo docker pull 205639412702.dkr.ecr.us-west-2.amazonaws.com/datafire:latest
 sudo docker save 205639412702.dkr.ecr.us-west-2.amazonaws.com/datafire | gzip > ./datafire-image.tar.gz
 sudo docker cp ./datafire-image.tar.gz datafire-docker:/home/dockremap/datafire-image.tar.gz
@@ -61,7 +61,6 @@ Now we need to tell the DataFire backend where each of these services live.
 Use `docker inspect` to find the IP address for each container:
 ```bash
 sudo docker inspect datafire-mongo  | grep IPAddress
-sudo docker inspect datafire-docker | grep IPAddress
 ```
 
 Add your MongoDB location to `./backend/DataFire-accounts.yml`. For example:
@@ -73,13 +72,20 @@ mongodb:
     integration: mongodb
 ```
 
+```bash
+sudo docker inspect datafire-docker | grep IPAddress
+sudo docker inspect datafire-git | grep IPAddress
+```
+
 Add your Docker location to `./backend/settings.js`. You should also set
-your machine's public or intranet IP address as `api_host`. For example:
+your machine's public or intranet IP address as `api_host` and `web_host`. For example:
 
 ```js
 modle.exports = {
-  api_host: 'http://localhost:3001',
+  web_host: 'http://datafire.acme-co.com',
+  api_host: 'http://datafire.acme-co.com:3001',
   docker_host: 'http://172.17.0.4:2375',
+  git_host: 'http://172.17.0.5:3002',
 }
 ```
 
@@ -114,13 +120,14 @@ We also need to set `git_host` to be the same as `api_host`.
 
 Unless you're just visiting the website on `localhost`, this should be the public or intranet IP of your server.
 
+Edit `./web/settings.ts`
 ```ts
 export const settings:any = {
   whitelabel: true,
-  web_host: 'http://localhost',
-  api_host: 'http://localhost:3001',
-  git_host: 'http://localhost:3001',
-  deployment_host: 'http://localhost',
+  web_host: 'http://localhost',        # The URL where the website will be hosted
+  api_host: 'http://localhost:3001',   # The address of the API server above
+  git_host: 'http://localhost:3001',   # Usually, the same address as the API server (which proxies the git server)
+  deployment_host: 'http://localhost', # The address where DIND can be reached (usually the same address as the API server, with no port)
 }
 ```
 
